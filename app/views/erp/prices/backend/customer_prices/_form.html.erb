@@ -1,0 +1,59 @@
+<%= form_tag(erp_prices.do_update_contact_backend_customer_prices_path(contact_id: contact.id)) do %>
+    <div class="form-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="portlet light bordered">
+                    <div class="portlet-body form">
+                        <% if contact.id == Erp::Contacts::Contact.get_main_contact.id %>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4 class="profile-desc-title bold font-blue-madison">
+                                        <%= t('.all_customers') %>
+                                    </h4>
+                                </div>
+                            </div>
+                        <% else %>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="profile-desc-title font-blue-madison">
+                                        <%= t('.customer') %>: <span class="bold"><%= contact_link(contact, contact.name + ' (' + contact.code + ')') %></span>
+                                    </h5>
+                                </div>
+                                <% if contact.salesperson.present? %>
+                                <div class="col-md-6">
+                                    <h5 class="profile-desc-title font-blue-madison">
+                                        <%= t('.salesperson') %>: <span class="bold"><%= contact.salesperson_name %></span>
+                                    </h5>
+                                </div>
+                                <% end %>
+                            </div>
+                        <% end %>
+                        <hr class="no-margin mb-10">
+                        <%= erp_form_control("addableform", {
+                            type: 'table',
+                            add_button: t('.add_price'),
+                            partial: 'erp/prices/backend/customer_prices/line_form',
+                            partial_url: erp_prices.line_form_backend_customer_prices_path,
+                            items: @contact.contact_prices.customer_prices,
+                            item: :customer_price,
+                            thead: "<th width=\"15%\">#{t('.categories')}</th>
+                                    <th class='text-right'>#{t('.properties_values')}</th>
+                                    <th class='text-right'>#{t('.min_quantity')}</th>
+                                    <th class='text-right'>#{t('.max_quantity')}</th>
+                                    <th class='text-right'>#{t('.sales_price')}</th>
+                                    <th class='text-right'>#{t('.actions')}</th>",
+                            no_tr: true
+                        }) %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%= erp_component('button/save', {
+        text: t('.submit')
+    }) %>
+    <%= erp_component('button/cancel', {
+        text: t('.cancel'),
+        href: erp_prices.backend_customer_prices_path
+    }) %>
+<% end %>

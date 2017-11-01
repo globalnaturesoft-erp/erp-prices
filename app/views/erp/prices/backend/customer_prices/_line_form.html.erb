@@ -1,0 +1,54 @@
+<tr class="addableform-line">
+    <td width="20%" >
+        <input type="hidden" name="contact[contact_prices_attributes][<%= uid %>][id]" value="<%= customer_price.id %>">
+        <input type="hidden" name="contact[contact_prices_attributes][<%= uid %>][price_type]" value="<%= customer_price.price_type %>">
+        <input type="hidden" name="contact[contact_prices_attributes][<%= uid %>][_destroy]" value="">
+        <%= erp_form_control("dataselect", {
+            name: 'contact[contact_prices_attributes][' + uid + '][category_id]',
+            value: customer_price.category_id,
+            text: customer_price.category_name,
+            placeholder: t('.choose_category'),
+            url: erp_products.dataselect_backend_categories_path(format: 'json')
+        }) %>
+    </td>
+    <td width="20%" class="text-right">
+        <!-- @TODO orthok only -->
+        <% diameter = Erp::Products::Property.where(name: "Đường kính").first %>
+        <%= erp_form_control("dataselect", {
+            name: 'contact[contact_prices_attributes][' + uid + '][properties_value_id]',
+            value: customer_price.properties_value_id,
+            text: customer_price.properties_value_name,
+            placeholder: t('.choose_properties_value'),
+            url: erp_products.dataselect_backend_properties_values_path(format: 'json', property_id: diameter.id)
+        }) %>
+    </td>
+    <td width="10%" class="text-right">
+        <%= erp_form_control("number", {
+            name: 'contact[contact_prices_attributes][' + uid + '][min_quantity]',
+            value: customer_price.min_quantity,
+            text: customer_price.min_quantity,
+            class: "line_min_quantity inline"
+        }) %>
+    </td>
+    <td width="10%" class="text-right">
+        <%= erp_form_control("number", {
+            name: 'contact[contact_prices_attributes][' + uid + '][max_quantity]',
+            value: customer_price.max_quantity,
+            text: customer_price.max_quantity,
+            class: "line_max_quantity inline"
+        }) %>
+    </td>
+    <td width="10%" class="text-right">
+        <%= erp_form_control("number", {
+            name: 'contact[contact_prices_attributes][' + uid + '][price]',
+            value: customer_price.price,
+            text: customer_price.price,
+            class: "line_price inline"
+        }) %>
+    </td>
+    <td width="5%" class="text-right">
+        <%= erp_form_control("addableform_remove_button", {
+            is_nested_form: true
+        }) %>
+    </td>
+</tr>

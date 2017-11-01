@@ -1,0 +1,57 @@
+<div class="">
+    <table class="table table-advance" id="">
+        <thead>
+            <tr>
+                <th>
+                    <%= t('.category_name') %>
+                </th>
+                <th class="text-left">
+                    <%= t('.min_max_qty') %>
+                </th>
+                <th class="text-center">
+                    <%= t('.diameter') %> <!-- @TODO orthok only -->
+                </th>
+                <th class="text-right">
+                    <%= t('.price') %>
+                </th>
+            </tr>
+        </thead>
+        <tbody>            
+            <% @categories.each_with_index do |category,cat_num| %>
+                <% table = Erp::Prices::Price.get_contact_prices_rows(contact_id: Erp::Contacts::Contact.get_main_contact.id,
+                    category_id: category.id, type: Erp::Prices::Price::TYPE_SALES) %>
+                    
+                    <% if table.empty? %>
+                        <tr class="custom-row-<%= cat_num%2 %>">
+                            <% if get_columns(params).include?("category_name") %>
+                                <th>
+                                    <strong><%= category.name %></strong>
+                                </th>
+                            <% end %>
+                            <td class="text-left"><strong>--</strong></td>
+                            <td class="text-center"><strong>--</strong></td>
+                            <td class="text-right"><strong>--</strong></td>
+                        </tr>
+                    <% end %>
+                    
+                    <% table.each_with_index do |row,index| %>
+                        <tr class="custom-row-<%= cat_num%2 %>">
+                            <% if get_columns(params).include?("category_name") and index == 0 %>
+                                <th rowspan="<%= table.count %>">
+                                    <strong><%= category.name %></strong>
+                                </th>
+                            <% end %>
+                            <td class="text-left"><%= row[:min_max] %></td>
+                            <td class="text-center"><%= row[:pvalue] %></td>
+                            <td class="text-right"><strong><%= format_price(row[:price]) %></strong></td>
+                        </tr>
+                    <% end %>
+            <% end %>
+        </tbody>
+    </table>
+    <% if @categories.empty? %>
+        <div class="datalist-empty-line"><%= t('.no_matching_records_found') %></div>
+    <% end %>
+        
+    <%= erp_datalist_pagination(@categories) %>
+</div>

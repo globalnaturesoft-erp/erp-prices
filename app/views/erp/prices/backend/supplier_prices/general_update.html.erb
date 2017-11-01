@@ -1,0 +1,17 @@
+<% content_for :title do %>
+    <%= t('.general_price_update') %>
+<% end %>
+
+<% content_for :page_title do %>    
+    <a href="<%= erp_prices.general_backend_supplier_prices_path %>">
+    <i class="fa fa-table"></i> <%= t('.prices') %>
+    </a> / <%= t('.update') %>
+<% end %>
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN SAMPLE FORM PORTLET-->
+        <%= render 'form', contact: @contact %>
+        <!-- END SAMPLE FORM PORTLET-->
+    </div>
+</div>

@@ -1,0 +1,92 @@
+vi:
+  erp:
+    prices:
+      backend:
+        customer_prices:
+          do_update_contact:
+            success: "Cập nhật bảng giá bán thành công"
+          index:
+            prices: "Bảng giá khách hàng"
+          contact_list:
+            contact: "Tên khách hàng"
+            actions: "Tác vụ"
+            update_price: "Cập nhật giá bán"
+          update_contact:
+            prices: "Bảng giá khách hàng"
+            update_contact_price: "Cập nhật bảng giá khách hàng"
+          form:
+            all_customers: "Cập nhật giá bán - áp dụng bán chung cho tất cả khách hàng"
+            customer: "Khách hàng"
+            salesperson: "Nhân viên kinh doanh"
+            add_price: "Thêm giá bán"
+            categories: "Chuyên mục SP"
+            properties_values: "Thuộc tính"
+            min_quantity: "SL tối thiểu"
+            max_quantity: "SL tối đa"
+            sales_price: "Giá bán"
+            actions: "Tác vụ"
+            submit: "Lưu"
+            cancel: "Hủy"
+          line_form:
+            choose_category: "Chọn chuyên mục"
+            choose_properties_value: "Chọn thuộc tính"
+          general:
+            prices: "Bảng giá bán chung"
+            update_price: "Cập nhật bảng giá"
+            category_name: "Chuyên mục"
+            min_max_qty: "Số lượng (từ-đến)"
+            diameter: "Đường kính"
+            price: "Giá bán"
+          general_list:
+            category_name: "Chuyên mục"
+            min_max_qty: "Số lượng (từ-đến)"
+            diameter: "Đường kính"
+            price: "Giá bán"
+          general_update:
+            general_price_update: "Cập nhật bảng giá bán chung"
+            prices: "Bảng giá bán chung"
+            update: "Cập nhật"
+        supplier_prices:
+          do_update_contact:
+            success: "Cập nhật bảng giá bán thành công"
+          index:
+            prices: "Bảng giá nhà cung cấp"
+          contact_list:
+            contact: "Tên nhà cung cấp"
+            actions: "Tác vụ"
+            update_price: "Cập nhật giá mua"
+          update_contact:
+            prices: "Bảng giá nhà cung cấp"
+            update_contact_price: "Cập nhật bảng giá nhà cung cấp"
+          form:
+            all_suppliers: "Cập nhật giá mua - áp dụng mua chung từ tất cả nhà cung cấp"
+            supplier: "Nhà cung cấp"
+            employee: "Nhân viên phụ trách"
+            add_price: "Thêm giá mua"
+            categories: "Chuyên mục SP"
+            properties_values: "Thuộc tính"
+            min_quantity: "SL tối thiểu"
+            max_quantity: "SL tối đa"
+            purchase_price: "Giá mua"
+            actions: "Tác vụ"
+            submit: "Lưu"
+            cancel: "Hủy"
+          line_form:
+            choose_category: "Chọn chuyên mục"
+            choose_properties_value: "Chọn thuộc tính"
+          general:
+            prices: "Bảng giá mua chung"
+            update_price: "Cập nhật bảng giá"
+            category_name: "Chuyên mục"
+            min_max_qty: "Số lượng (từ-đến)"
+            diameter: "Đường kính"
+            price: "Giá mua"
+          general_list:
+            category_name: "Chuyên mục"
+            min_max_qty: "Số lượng (từ-đến)"
+            diameter: "Đường kính"
+            price: "Giá mua"
+          general_update:
+            general_price_update: "Cập nhật bảng giá mua chung"
+            prices: "Bảng giá mua chung"
+            update: "Cập nhật"

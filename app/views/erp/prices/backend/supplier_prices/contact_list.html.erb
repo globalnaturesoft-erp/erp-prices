@@ -1,0 +1,59 @@
+<div class="table-scrollable noborder">
+    <table class="table table-advance table-hover table-striped table-checkable order-column" id="">
+        <thead>
+            <tr>
+                <th width='1%'>
+                    <%= erp_datalist_check_all %>
+                </th>
+                <th>
+                    <%= t('.contact') %>
+                </th>
+                <% Erp::Products::Category.all. each do |cat| %>
+                    <% if get_columns(params).include?("category_name_#{cat.id}") %>
+                        <th class="text-right">
+                            <%= cat.name %>
+                        </th>
+                    <% end %>
+                <% end %>
+                <th width="7%"><%= t('.actions') %></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @contacts.each do |contact| %>
+                <tr class="odd gradeX">
+                    <td>
+                        <%= erp_datalist_check_row(id: contact.id) %>
+                    </td>
+                    <td>
+                        <strong><%= contact.name %></strong>
+                    </td>
+                    <% Erp::Products::Category.all. each do |cat| %>
+                        <% if get_columns(params).include?("category_name_#{cat.id}") %>
+                        <td class="text-right text-nowrap">
+                            <% Erp::Prices::Price.get_contact_prices_rows(contact_id: contact.id,
+                                                        category_id: cat.id, type: Erp::Prices::Price::TYPE_PURCHASE).each do |row| %>
+                                <%= raw row[:title] + ': <strong>' + format_price(row[:value]) + '</strong>' %><br>
+                            <% end %>
+                        </td>
+                        <% end %>
+                    <% end %>
+                    <td>
+                        <%= erp_datalist_row_actions(
+                            [
+                                {
+                                    text: '<i class="fa fa-edit"></i> '+t('.update_price'),
+                                    url: erp_prices.update_contact_backend_supplier_prices_path(contact_id: contact.id)
+                                }
+                            ]
+                        ) %>
+                    </td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+    <% if @contacts.empty? %>
+        <div class="datalist-empty-line"><%= t('.no_matching_records_found') %></div>
+    <% end %>
+        
+    <%= erp_datalist_pagination(@contacts) %>
+</div>
