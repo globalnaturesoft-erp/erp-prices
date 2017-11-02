@@ -32,7 +32,7 @@
                         <td class="text-right text-nowrap">
                             <% Erp::Prices::Price.get_contact_prices_rows(contact_id: contact.id,
                                                         category_id: cat.id, type: Erp::Prices::Price::TYPE_SALES).each do |row| %>
-                                <%= raw row[:title] + ': <strong>' + format_price(row[:value]) + '</strong>' %><br>
+                                <%= raw row[:min_max] + ' : ' + row[:pvalue] + ' : <strong>' + format_price(row[:price]) + '</strong>' %><br>
                             <% end %>
                         </td>
                         <% end %>
