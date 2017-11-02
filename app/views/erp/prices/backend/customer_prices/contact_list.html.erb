@@ -30,7 +30,7 @@
                     <% Erp::Products::Category.all. each do |cat| %>
                         <% if get_columns(params).include?("category_name_#{cat.id}") %>
                         <td class="text-right text-nowrap">
-                            <% Erp::Prices::Price.get_contact_prices_rows(contact_id: contact.id,
+                            <% Erp::Prices::Price.get_related_prices_rows(contact_id: contact.id,
                                                         category_id: cat.id, type: Erp::Prices::Price::TYPE_SALES).each do |row| %>
                                 <%= raw row[:min_max] + ' : ' + row[:pvalue] + ' : <strong>' + format_price(row[:price]) + '</strong>' %><br>
                             <% end %>

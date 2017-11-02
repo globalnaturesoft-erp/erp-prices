@@ -34,7 +34,7 @@ module Erp::Prices
     end
     
     # get contact prices list
-    def self.get_contact_prices(params={})
+    def self.get_related_prices(params={})
       query = self.all
       
       if params[:type].present?
@@ -49,19 +49,34 @@ module Erp::Prices
         query = query.where(category_id: params[:category_id])
       end
       
+      if params[:quantity].present?
+        query = query.where('(min_quantity IS NULL OR min_quantity = 0 OR min_quantity <= ?) AND (max_quantity IS NULL OR max_quantity = 0 OR max_quantity >= ?)', params[:quantity], params[:quantity])
+      end
+      
       return query
     end
     
+    # display max min value
+    def display_min_max
+      min = (!self.min_quantity.present? or self.min_quantity <= 0) ? 1 : self.min_quantity
+      max = (!self.max_quantity.present? or self.max_quantity <= 0) ? '∞' : self.max_quantity #unlimited
+      return "#{min} - #{max}"
+    end
+    
     # get prices rows
-    def self.get_contact_prices_rows(params={})
-      contact_prices = self.get_contact_prices(params)
+    def self.get_related_prices_rows(params={})
+      contact_prices = self.get_related_prices(params)
       rows = []
       contact_prices.each do |cp|
-        min = (!cp.min_quantity.present? or cp.min_quantity <= 0) ? 1 : cp.min_quantity
-        max = (!cp.max_quantity.present? or cp.max_quantity <= 0) ? '∞' : cp.max_quantity #unlimited 
-        rows << {min_max: "#{min} - #{max}", pvalue: cp.properties_value_name, price: cp.price}
+        rows << {min_max: cp.display_min_max, pvalue: cp.properties_value_name, price: cp.price}
       end
       return rows
     end
+    
+    # get price by product
+    def self.get_by_product(params={})
+      query = self.get_related_prices(params).order('created_at DESC')
+      return query.first
+    end   
   end
 end

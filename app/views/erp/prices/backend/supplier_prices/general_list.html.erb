@@ -18,7 +18,7 @@
         </thead>
         <tbody>            
             <% @categories.each_with_index do |category,cat_num| %>
-                <% table = Erp::Prices::Price.get_contact_prices_rows(contact_id: Erp::Contacts::Contact.get_main_contact.id,
+                <% table = Erp::Prices::Price.get_related_prices_rows(contact_id: Erp::Contacts::Contact.get_main_contact.id,
                     category_id: category.id, type: Erp::Prices::Price::TYPE_PURCHASE) %>
                     
                     <% if table.empty? %>
