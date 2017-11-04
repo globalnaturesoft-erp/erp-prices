@@ -32,7 +32,7 @@
                         <td class="text-right text-nowrap">
                             <% Erp::Prices::Price.get_related_prices_rows(contact_id: contact.id,
                                                         category_id: cat.id, type: Erp::Prices::Price::TYPE_SALES).each do |row| %>
-                                <%= raw row[:min_max] + ' : ' + row[:pvalue] + ' : <strong>' + format_price(row[:price]) + '</strong>' %><br>
+                                <span class="font-yellow text-small"><%= raw row[:min_max] + ' / ' + row[:pvalue] + '</span><br> <strong>' + format_price(row[:price]) + '</strong>' %><br>
                             <% end %>
                         </td>
                         <% end %>
@@ -54,6 +54,6 @@
     <% if @contacts.empty? %>
         <div class="datalist-empty-line"><%= t('.no_matching_records_found') %></div>
     <% end %>
-        
+
     <%= erp_datalist_pagination(@contacts) %>
 </div>

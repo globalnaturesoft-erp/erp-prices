@@ -1,82 +1,126 @@
 module Erp::Prices
   class Price < ApplicationRecord
     belongs_to :contact, class_name: 'Erp::Contacts::Contact'
-    belongs_to :category, class_name: 'Erp::Products::Category'
-    belongs_to :properties_value, class_name: 'Erp::Products::PropertiesValue'
-    
+
     # class const
     TYPE_SALES = 'sales'
     TYPE_PURCHASE = 'purchase'
-    
+
+    # convert array to column value
+    def categories=(ids)
+      if ids.kind_of?(Array)
+        self[:categories] = (ids.reject {|s| s.empty?}).to_json
+      else
+        self[:categories] = ids
+      end
+    end
+
+    # convert array to column value
+    def properties_values=(ids)
+      if ids.kind_of?(Array)
+        self[:properties_values] = (ids.reject {|s| s.empty?}).to_json
+      else
+        self[:properties_values] = ids
+      end
+    end
+
+    # get categories dataselect values
+    def categories_dataselect_values
+      return [] if categories.nil?
+      Erp::Products::Category.where(id: JSON.parse(categories)).map{|cat| {'text': cat.name, 'value': cat.id}}
+    end
+
+    # get categories dataselect values
+    def properties_values_dataselect_values
+      return [] if categories.nil?
+      Erp::Products::PropertiesValue.where(id: JSON.parse(properties_values)).map{|pv| {'text': pv.value, 'value': pv.id}}
+    end
+
+    # display properties values
+    def display_properties_values
+      Erp::Products::PropertiesValue.where(id: JSON.parse(properties_values)).map(&:value).join(', ')
+    end
+
     # display name for category (product)
     def category_name
       category.present? ? category.name : ''
     end
-    
+
     # display name for properties value (product)
     def properties_value_name
       properties_value.present? ? properties_value.value : ''
     end
-    
+
     # format price
     def price=(new_price)
       self[:price] = new_price.to_s.gsub(/\,/, '')
     end
-    
+
     # get customer prices (is sales)
     def self.customer_prices
       self.where(price_type: Erp::Prices::Price::TYPE_SALES)
     end
-    
+
     # get supplier prices (is purchase)
     def self.supplier_prices
       self.where(price_type: Erp::Prices::Price::TYPE_PURCHASE)
     end
-    
+
     # get contact prices list
     def self.get_related_prices(params={})
       query = self.all
-      
+
       if params[:type].present?
         query = query.where(price_type: params[:type])
       end
-      
-      if params[:contact_id].present?
-        query = query.where(contact_id: params[:contact_id])
-      end
-      
+
       if params[:category_id].present?
-        query = query.where(category_id: params[:category_id])
+        query = query.where("categories LIKE ? OR categories is NULL OR categories = '' OR categories = '[]'", '%"'+params[:category_id].to_s+'"%')
       end
-      
+
+      if params[:properties_value_id].present?
+        query = query.where("properties_values LIKE ? OR properties_values is NULL OR properties_values = '' OR properties_values = '[]'", '%"'+params[:properties_value_id].to_s+'"%')
+      end
+
       if params[:quantity].present?
         query = query.where('(min_quantity IS NULL OR min_quantity = 0 OR min_quantity <= ?) AND (max_quantity IS NULL OR max_quantity = 0 OR max_quantity >= ?)', params[:quantity], params[:quantity])
       end
-      
+
+      if params[:contact_id].present?
+        c_query = query.where(contact_id: params[:contact_id])
+
+        # lấy bảng giá mặc định nếu bảng giá cho contact empty
+        if c_query.count > 0
+          return c_query
+        else
+          return query.where(contact_id: Erp::Contacts::Contact.get_main_contact.id)
+        end
+      end
+
       return query
     end
-    
+
     # display max min value
     def display_min_max
       min = (!self.min_quantity.present? or self.min_quantity <= 0) ? 1 : self.min_quantity
       max = (!self.max_quantity.present? or self.max_quantity <= 0) ? '∞' : self.max_quantity #unlimited
       return "#{min} - #{max}"
     end
-    
+
     # get prices rows
     def self.get_related_prices_rows(params={})
       contact_prices = self.get_related_prices(params)
       rows = []
       contact_prices.each do |cp|
-        rows << {min_max: cp.display_min_max, pvalue: cp.properties_value_name, price: cp.price}
+        rows << {min_max: cp.display_min_max, pvalue: cp.display_properties_values, price: cp.price}
       end
       return rows
     end
-    
+
     # get price by product
     def self.get_by_product(params={})
       query = self.get_related_prices(params).order('created_at DESC')
       return query.first
-    end   
+    end
   end
 end

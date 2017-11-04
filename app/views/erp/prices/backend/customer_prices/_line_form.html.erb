@@ -4,22 +4,22 @@
         <input type="hidden" name="contact[contact_prices_attributes][<%= uid %>][price_type]" value="<%= customer_price.price_type %>">
         <input type="hidden" name="contact[contact_prices_attributes][<%= uid %>][_destroy]" value="">
         <%= erp_form_control("dataselect", {
-            name: 'contact[contact_prices_attributes][' + uid + '][category_id]',
-            value: customer_price.category_id,
-            text: customer_price.category_name,
+            name: 'contact[contact_prices_attributes][' + uid + '][categories][]',
+            values: customer_price.categories_dataselect_values,
             placeholder: t('.choose_category'),
-            url: erp_products.dataselect_backend_categories_path(format: 'json')
+            url: erp_products.dataselect_backend_categories_path(format: 'json'),
+            multiple: true,
         }) %>
     </td>
-    <td width="20%" class="text-right">
+    <td width="20%" class="text-left">
         <!-- @TODO orthok only -->
         <% diameter = Erp::Products::Property.where(name: "Đường kính").first %>
         <%= erp_form_control("dataselect", {
-            name: 'contact[contact_prices_attributes][' + uid + '][properties_value_id]',
-            value: customer_price.properties_value_id,
-            text: customer_price.properties_value_name,
+            name: 'contact[contact_prices_attributes][' + uid + '][properties_values][]',
+            values: customer_price.properties_values_dataselect_values,
             placeholder: t('.choose_properties_value'),
-            url: erp_products.dataselect_backend_properties_values_path(format: 'json', property_id: diameter.id)
+            url: erp_products.dataselect_backend_properties_values_path(format: 'json', property_id: diameter.id),
+            multiple: true,
         }) %>
     </td>
     <td width="10%" class="text-right">
@@ -43,7 +43,8 @@
             name: 'contact[contact_prices_attributes][' + uid + '][price]',
             value: customer_price.price,
             text: customer_price.price,
-            class: "line_price inline"
+            class: "line_price inline",
+            required: true,
         }) %>
     </td>
     <td width="5%" class="text-right">

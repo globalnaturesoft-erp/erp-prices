@@ -12,21 +12,21 @@ module Erp
 
           render layout: nil
         end
-        
+
         # GET /customer_prices/1/edit
         def update_contact
         end
-        
+
         # POST /customer_prices/general_list
         def general_list
           # @ todo update get categories
           @categories = Erp::Products::Category.all.paginate(:page => params[:page], :per_page => 10)
         end
-        
+
         # GET /customer_prices/1/edit
         def general_update
         end
-        
+
         # PATCH/PUT /customer_prices/1
         def do_update_contact
           if @contact.update(contact_params)
@@ -39,7 +39,7 @@ module Erp
             else
               if @contact == Erp::Contacts::Contact.get_main_contact
                 redirect_to erp_prices.general_backend_customer_prices_path, notice: t('.success')
-              else 
+              else
                 redirect_to erp_prices.backend_customer_prices_path, notice: t('.success')
               end
             end
@@ -47,7 +47,7 @@ module Erp
             render :edit_contact
           end
         end
-    
+
         def line_form
           @customer_price = Price.new
           @customer_price.price_type = Erp::Prices::Price::TYPE_SALES
@@ -58,18 +58,18 @@ module Erp
             uid: helpers.unique_id()
           }
         end
-    
+
         private
           # Use callbacks to share common setup or constraints between actions.
           def set_contact
             @contact = params[:contact_id].present? ? Erp::Contacts::Contact.find(params[:contact_id]) : Erp::Contacts::Contact.get_main_contact
           end
-    
+
           # Only allow a trusted parameter "white list" through.
           def contact_params
             params.fetch(:contact, {}).permit(
-              :contact_prices_attributes => [:id, :contact_id, :category_id, :properties_value_id, :price_type,
-                                              :min_quantity, :max_quantity, :price, :_destroy]
+              :contact_prices_attributes => [:id, :contact_id, :price_type,
+                                              :min_quantity, :max_quantity, :price, :_destroy, :categories => [], :properties_values => []]
               )
           end
       end
