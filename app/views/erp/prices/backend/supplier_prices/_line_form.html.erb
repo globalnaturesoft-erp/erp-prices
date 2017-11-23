@@ -11,7 +11,7 @@
             multiple: true,
         }) %>
     </td>
-    <td width="20%" class="text-right">
+    <td width="20%" class="text-left">
         <!-- @TODO orthok only -->
         <% diameter = Erp::Products::Property.where(name: "Đường kính").first %>
         <%= erp_form_control("dataselect", {
