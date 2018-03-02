@@ -63,6 +63,7 @@ vi:
             supplier: "Nhà cung cấp"
             employee: "Nhân viên phụ trách"
             add_price: "Thêm giá mua"
+            products: "Sản phẩm áp dụng"
             categories: "Chuyên mục SP"
             properties_values: "Thuộc tính"
             min_quantity: "SL tối thiểu"
@@ -72,6 +73,7 @@ vi:
             submit: "Lưu"
             cancel: "Hủy"
           line_form:
+            choose_product: "Chọn sản phẩm"
             choose_category: "Chọn chuyên mục"
             choose_properties_value: "Chọn thuộc tính"
           general:

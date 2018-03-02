@@ -69,7 +69,7 @@ module Erp
           def contact_params
             params.fetch(:contact, {}).permit(
               :contact_prices_attributes => [:id, :contact_id, :price_type,
-                                              :min_quantity, :max_quantity, :price, :_destroy, :categories => [], :properties_values => []]
+                                              :min_quantity, :max_quantity, :price, :_destroy, :categories => [], :properties_values => [], :products => []]
               )
           end
       end

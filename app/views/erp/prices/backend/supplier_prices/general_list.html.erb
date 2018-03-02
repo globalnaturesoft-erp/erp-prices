@@ -1,3 +1,6 @@
+<%
+    total_colspan = (get_columns(params).include?("category_name") ? 1 : 0) + 3
+%>
 <div class="">
     <table class="table table-advance" id="">
         <thead>
@@ -46,6 +49,26 @@
                             <td class="text-right"><strong><%= format_price(row[:price]) %></strong></td>
                         </tr>
                     <% end %>
+            <% end %>
+            
+            <% table = Erp::Prices::Price.get_related_prices_rows(contact_id: Erp::Contacts::Contact.get_main_contact.id,
+                only_product: true, type: Erp::Prices::Price::TYPE_PURCHASE) %>
+            <% if table.count > 0 %>
+                <tr>
+                    <td colspan="<%= total_colspan %>" class="custom-row-product text-center bold">
+                        <span class="fa fa-arrow-circle-down"></span> GIÁ CHO SẢN PHẨM CỤ THỂ <span class="fa fa-arrow-circle-down"></span>
+                    </td>
+                </tr>
+            <% end %>
+            <% table.each_with_index do |row,index| %>
+                <tr class="custom-row-product-<%= index%2 %>">
+                    <th rowspan="">
+                        <strong><%= row[:products] %></strong>
+                    </th>
+                    <td class="text-left"><%= row[:min_max] %></td>
+                    <td class="text-center"><%= row[:pvalue] %></td>
+                    <td class="text-right"><strong><%= format_price(row[:price]) %></strong></td>
+                </tr>
             <% end %>
         </tbody>
     </table>

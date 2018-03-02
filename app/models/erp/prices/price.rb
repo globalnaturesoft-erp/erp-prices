@@ -24,21 +24,41 @@ module Erp::Prices
       end
     end
 
+    # convert array to column value
+    def products=(ids)
+      if ids.kind_of?(Array)
+        self[:products] = (ids.reject {|s| s.empty?}).to_json
+      else
+        self[:products] = ids
+      end
+    end
+
     # get categories dataselect values
     def categories_dataselect_values
       return [] if categories.nil?
       Erp::Products::Category.where(id: JSON.parse(categories)).map{|cat| {'text': cat.name, 'value': cat.id}}
     end
 
-    # get categories dataselect values
+    # get properties_values dataselect values
     def properties_values_dataselect_values
-      return [] if categories.nil?
+      return [] if properties_values.nil?
       Erp::Products::PropertiesValue.where(id: JSON.parse(properties_values)).map{|pv| {'text': pv.value, 'value': pv.id}}
+    end
+
+    # get products dataselect values
+    def products_dataselect_values
+      return [] if products.nil?
+      Erp::Products::Product.where(id: JSON.parse(products)).map{|p| {'text': p.name, 'value': p.id}}
     end
 
     # display properties values
     def display_properties_values
       Erp::Products::PropertiesValue.where(id: JSON.parse(properties_values)).map(&:value).join(', ')
+    end
+
+    # display products name
+    def display_products_name
+      Erp::Products::Product.where(id: JSON.parse(products)).map(&:name).join('<br>').html_safe
     end
 
     # display name for category (product)
@@ -85,6 +105,12 @@ module Erp::Prices
       if params[:quantity].present?
         query = query.where('(min_quantity IS NULL OR min_quantity = 0 OR min_quantity <= ?) AND (max_quantity IS NULL OR max_quantity = 0 OR max_quantity >= ?)', params[:quantity], params[:quantity])
       end
+      
+      if params[:only_product].present?
+        query = query.where("products IS NOT NULL AND products != '' AND products != '[]'").where.not(price: nil)
+      else
+        query = query.where("products IS NULL OR products = '' OR products = '[]'").where.not(price: nil)
+      end
 
       if params[:contact_id].present?
         c_query = query.where(contact_id: params[:contact_id])
@@ -112,7 +138,7 @@ module Erp::Prices
       contact_prices = self.get_related_prices(params)
       rows = []
       contact_prices.each do |cp|
-        rows << {min_max: cp.display_min_max, pvalue: cp.display_properties_values, price: cp.price}
+        rows << {products: cp.display_products_name, min_max: cp.display_min_max, pvalue: cp.display_properties_values, price: cp.price}
       end
       return rows
     end
