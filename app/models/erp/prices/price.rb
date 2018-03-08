@@ -58,7 +58,9 @@ module Erp::Prices
 
     # display products name
     def display_products_name
-      Erp::Products::Product.where(id: JSON.parse(products)).map(&:name).join('<br>').html_safe
+      return '' if !products.present?
+      prods = Erp::Products::Product.where(id: JSON.parse(products))
+      prods.empty? ? '' : prods.map(&:name).join('<br>').html_safe
     end
 
     # display name for category (product)
@@ -106,20 +108,34 @@ module Erp::Prices
         query = query.where('(min_quantity IS NULL OR min_quantity = 0 OR min_quantity <= ?) AND (max_quantity IS NULL OR max_quantity = 0 OR max_quantity >= ?)', params[:quantity], params[:quantity])
       end
       
-      if params[:only_product].present?
+      # show for product list
+      if params[:for_product].present?
         query = query.where("products IS NOT NULL AND products != '' AND products != '[]'").where.not(price: nil)
-      else
+      end
+      
+      # show for category list
+      if params[:for_category].present?
         query = query.where("products IS NULL OR products = '' OR products = '[]'").where.not(price: nil)
       end
-
+      
       if params[:contact_id].present?
         c_query = query.where(contact_id: params[:contact_id])
 
         # lấy bảng giá mặc định nếu bảng giá cho contact empty
         if c_query.count > 0
-          return c_query
+          query = c_query
         else
-          return query.where(contact_id: Erp::Contacts::Contact.get_main_contact.id)
+          query = query.where(contact_id: Erp::Contacts::Contact.get_main_contact.id)
+        end
+      end
+      
+      # Get for product first then category if empty
+      if params[:product_id].present?
+        p_query = query.where("products LIKE ?", '%"'+params[:product_id].to_s+'"%')
+        if p_query.count > 0
+          query = p_query
+        else
+          query = query.where("products IS NULL OR products = '' OR products = '[]'")
         end
       end
 

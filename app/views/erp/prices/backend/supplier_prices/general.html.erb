@@ -42,3 +42,44 @@
         }
     ]
 ) %>
+
+<% table = Erp::Prices::Price.get_related_prices_rows(
+    contact_id: Erp::Contacts::Contact.get_main_contact.id,
+    for_product: true,
+    type: Erp::Prices::Price::TYPE_PURCHASE
+) %>
+
+<table class="table table-advance" id="">
+    <thead>
+        <% if table.count > 0 %>
+            <tr>
+                <th colspan="3" class="custom-row-product text-center bold">
+                    <span class="fa fa-arrow-circle-down"></span> GIÁ CHO SẢN PHẨM CỤ THỂ <span class="fa fa-arrow-circle-down"></span>
+                </th>
+            </tr>
+        <% end %>
+        <tr>
+            <th>
+                <%= 'Tên sản phẩm / hàng hóa' %>
+            </th>
+            <th class="text-left">
+                <%= t('.min_max_qty') %>
+            </th>
+            </th>
+            <th class="text-right">
+                <%= t('.price') %>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <% table.each_with_index do |row,index| %>
+            <tr class="custom-row-product-<%= index%2 %>">
+                <th rowspan="">
+                    <strong><%= row[:products] %></strong>
+                </th>
+                <td class="text-left"><%= row[:min_max] %></td>
+                <td class="text-right"><strong><%= format_price(row[:price]) %></strong></td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>
