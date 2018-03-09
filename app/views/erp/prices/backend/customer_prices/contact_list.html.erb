@@ -20,19 +20,35 @@
         </thead>
         <tbody>
             <% @contacts.each do |contact| %>
-                <tr class="odd gradeX">
+                <% table = Erp::Prices::Price.get_related_prices_rows(
+                    contact_id: contact.id,
+                    for_product: true,
+                    type: Erp::Prices::Price::TYPE_SALES
+                ) %>
+                <tr class="odd gradeX has-child-table" data-url="<%= erp_prices.contact_list_details_backend_customer_prices_path(id: contact.id) %>">
                     <td>
                         <%= erp_datalist_check_row(id: contact.id) %>
                     </td>
                     <td>
+                        <i class="fa fa-plus expand tr-expand-button <%= 'disabled' if false %>"></i>
                         <strong><%= contact.name %></strong>
                     </td>
                     <% Erp::Products::Category.all. each do |cat| %>
                         <% if get_columns(params).include?("category_name_#{cat.id}") %>
                         <td class="text-right text-nowrap">
-                            <% Erp::Prices::Price.get_related_prices_rows(contact_id: contact.id,
-                                                        category_id: cat.id, type: Erp::Prices::Price::TYPE_SALES).each do |row| %>
-                                <span class="font-yellow text-small"><%= raw row[:min_max] + ' / ' + row[:pvalue] + '</span><br> <strong>' + format_price(row[:price]) + '</strong>' %><br>
+                            <% Erp::Prices::Price.get_related_prices_rows(
+                                contact_id: contact.id,
+                                for_category: true,
+                                category_id: cat.id,
+                                type: Erp::Prices::Price::TYPE_SALES
+                            ).each do |row| %>
+                                <span class="font-yellow text-small">
+                                    <%= raw (row[:min_max].present? ? ('SL: ' + row[:min_max]) : '') +
+                                            (row[:pvalue].present? ? (' | Đ.kính: ' + row[:pvalue]) : '')
+                                    %>
+                                </span><br>
+                                <strong><%= format_price(row[:price]) %></strong>
+                                <br>
                             <% end %>
                         </td>
                         <% end %>

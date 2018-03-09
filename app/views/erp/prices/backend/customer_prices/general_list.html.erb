@@ -18,8 +18,12 @@
         </thead>
         <tbody>            
             <% @categories.each_with_index do |category,cat_num| %>
-                <% table = Erp::Prices::Price.get_related_prices_rows(contact_id: Erp::Contacts::Contact.get_main_contact.id,
-                    category_id: category.id, type: Erp::Prices::Price::TYPE_SALES) %>
+                <% table = Erp::Prices::Price.get_related_prices_rows(
+                    contact_id: Erp::Contacts::Contact.get_main_contact.id,
+                    for_category: true,
+                    category_id: category.id,
+                    type: Erp::Prices::Price::TYPE_SALES
+                ) %>
                     
                     <% if table.empty? %>
                         <tr class="custom-row-<%= cat_num%2 %>">

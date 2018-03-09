@@ -12,6 +12,11 @@ module Erp
 
           render layout: nil
         end
+        
+        def contact_list_details
+          @contact = Erp::Contacts::Contact.find(params[:id])
+          render layout: nil
+        end
 
         # GET /customer_prices/1/edit
         def update_contact
@@ -69,7 +74,7 @@ module Erp
           def contact_params
             params.fetch(:contact, {}).permit(
               :contact_prices_attributes => [:id, :contact_id, :price_type,
-                                              :min_quantity, :max_quantity, :price, :_destroy, :categories => [], :properties_values => []]
+                                              :min_quantity, :max_quantity, :price, :_destroy, :categories => [], :properties_values => [], :products => []]
               )
           end
       end

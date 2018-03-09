@@ -4,6 +4,15 @@
         <input type="hidden" name="contact[contact_prices_attributes][<%= uid %>][price_type]" value="<%= customer_price.price_type %>">
         <input type="hidden" name="contact[contact_prices_attributes][<%= uid %>][_destroy]" value="">
         <%= erp_form_control("dataselect", {
+            name: 'contact[contact_prices_attributes][' + uid + '][products][]',
+            values: customer_price.products_dataselect_values,
+            placeholder: t('.choose_product'),
+            url: erp_products.dataselect_backend_products_path(format: 'json'),
+            multiple: true,
+        }) %>
+    </td>
+    <td width="20%" class="text-left">
+        <%= erp_form_control("dataselect", {
             name: 'contact[contact_prices_attributes][' + uid + '][categories][]',
             values: customer_price.categories_dataselect_values,
             placeholder: t('.choose_category'),

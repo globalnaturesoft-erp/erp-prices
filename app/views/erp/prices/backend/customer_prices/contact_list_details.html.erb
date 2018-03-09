@@ -1,0 +1,34 @@
+<% table = Erp::Prices::Price.get_related_prices_rows(
+    contact_id: @contact.id,
+    for_product: true,
+    type: Erp::Prices::Price::TYPE_SALES
+) %>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="custom-show text-center">
+            <h4 class="font-green-jungle bold uppercase">
+                Bảng giá sản phẩm - Áp dụng cho <%= @contact.name %>
+            </h4>
+        </div>
+    </div>
+</div>
+
+<table class="table table-bordered table-advance order-column">
+    <thead class="flip-content">
+        <tr>
+            <th class="text-left bg-green bg-font-green text-nowrap" width="70%">Tên hàng hóa / sản phẩm</th>
+            <th class="text-right bg-green bg-font-green text-nowrap">Số lượng<sup>(từ - đến)</sup></th>
+            <th class="text-right bg-green bg-font-green text-nowrap">Giá bán áp dụng<sup></sup></th>
+        </tr>
+    </thead>
+    <tbody>
+        <% table.each_with_index do |row,index| %>
+            <tr>
+                <td class="text-left"><strong><%= row[:products] %></strong></td>
+                <td class="text-center"><strong><%= row[:min_max] %></strong></td>
+                <td class="text-right"><strong><%= format_price(row[:price]) %></strong></td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

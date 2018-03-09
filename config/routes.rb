@@ -11,6 +11,7 @@ Erp::Prices::Engine.routes.draw do
           get 'general_update'
           get 'do_update_contact'
           post 'do_update_contact'
+          get 'contact_list_details'
         end
       end
       resources :supplier_prices do
