@@ -7,18 +7,14 @@
 <% end %>
 
 <%= cols= []
-    Erp::Products::Category.all.each_with_index do |cat,index| # @todo update get category
+    Erp::Products::Category.has_parent_categories.each_with_index do |cat,index| # @todo update get category
         cols << {
             text: cat.name, name: "category_name_#{cat.id}", value: true, checked: index < 5 ? true : false
         }
     end
     erp_datalist(
     url: erp_prices.contact_list_backend_supplier_prices_path,
-    keywords: [
-        {
-            text: t('.contact_name'), name: 'erp_contacts_contacts.name'
-        }
-    ],
+    keyword: true,
     actions: [
         
     ],

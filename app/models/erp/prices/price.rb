@@ -118,26 +118,29 @@ module Erp::Prices
         query = query.where("products IS NULL OR products = '' OR products = '[]'").where.not(price: nil)
       end
       
-      if params[:contact_id].present?
-        c_query = query.where(contact_id: params[:contact_id])
-
-        # lấy bảng giá mặc định nếu bảng giá cho contact empty
-        if c_query.count > 0
-          query = c_query
-        else
-          query = query.where(contact_id: Erp::Contacts::Contact.get_main_contact.id)
-        end
-      end
-      
       # Get for product first then category if empty
       if params[:product_id].present?
         p_query = query.where("products LIKE ?", '%"'+params[:product_id].to_s+'"%')
+        
         if p_query.count > 0
           query = p_query
         else
           query = query.where("products IS NULL OR products = '' OR products = '[]'")
         end
       end
+      
+      if params[:contact_id].present?
+        c_query = query.where(contact_id: params[:contact_id])
+
+        # lấy bảng giá mặc định nếu bảng giá cho contact empty. private_only: chi lay bang gia rieng, [] neu bang gia rieng khong co
+        if c_query.count > 0 or params[:private_only].present?
+          query = c_query
+        else
+          query = query.where(contact_id: Erp::Contacts::Contact.get_main_contact.id)
+        end
+      end
+      
+      
 
       return query
     end

@@ -6,9 +6,10 @@ module Erp
 
         # POST /customer_prices/contact_list
         def contact_list
-          @contacts = Erp::Contacts::Contact.where('id != ?', Erp::Contacts::Contact.get_main_contact.id)
-                                            .where(is_customer: true)
-                                            .paginate(:page => params[:page], :per_page => 10)
+          @contacts = Erp::Contacts::Contact.search(params)
+            .where(is_customer: true)
+            .where.not(id: Erp::Contacts::Contact.get_main_contact.id)
+            .paginate(:page => params[:page], :per_page => 10)
 
           render layout: nil
         end
@@ -25,7 +26,9 @@ module Erp
         # POST /customer_prices/general_list
         def general_list
           # @ todo update get categories
-          @categories = Erp::Products::Category.all.paginate(:page => params[:page], :per_page => 10)
+          @categories = Erp::Products::Category.search(params)
+            .has_parent_categories
+            .paginate(:page => params[:page], :per_page => 10)
         end
 
         # GET /customer_prices/1/edit

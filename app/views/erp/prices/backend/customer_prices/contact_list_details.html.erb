@@ -1,7 +1,8 @@
 <% table = Erp::Prices::Price.get_related_prices_rows(
     contact_id: @contact.id,
     for_product: true,
-    type: Erp::Prices::Price::TYPE_SALES
+    type: Erp::Prices::Price::TYPE_SALES,
+    private_only: true,
 ) %>
 
 <div class="row">
