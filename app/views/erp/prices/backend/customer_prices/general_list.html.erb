@@ -11,6 +11,9 @@
                 <th class="text-center">
                     <%= t('.diameter') %> <!-- @TODO orthok only -->
                 </th>
+                <th class="text-center">
+                    Chữ <!-- @TODO orthok only -->
+                </th>
                 <th class="text-right">
                     <%= t('.price') %>
                 </th>
@@ -34,6 +37,7 @@
                             <% end %>
                             <td class="text-left"><strong>--</strong></td>
                             <td class="text-center"><strong>--</strong></td>
+                            <td class="text-center"><strong>--</strong></td>
                             <td class="text-right"><strong>--</strong></td>
                         </tr>
                     <% end %>
@@ -47,6 +51,7 @@
                             <% end %>
                             <td class="text-left"><%= row[:min_max] %></td>
                             <td class="text-center"><%= row[:pvalue] %></td>
+                            <td class="text-center"><%= row[:lvalue] %></td>
                             <td class="text-right"><strong><%= format_price(row[:price]) %></strong></td>
                         </tr>
                     <% end %>

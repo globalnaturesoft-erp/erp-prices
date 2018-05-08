@@ -23,6 +23,15 @@ module Erp::Prices
         self[:properties_values] = ids
       end
     end
+    
+    # convert array to column value
+    def letters=(ids)
+      if ids.kind_of?(Array)
+        self[:letters] = (ids.reject {|s| s.empty?}).to_json
+      else
+        self[:letters] = ids
+      end
+    end
 
     # convert array to column value
     def products=(ids)
@@ -44,6 +53,12 @@ module Erp::Prices
       return [] if properties_values.nil?
       Erp::Products::PropertiesValue.where(id: JSON.parse(properties_values)).map{|pv| {'text': pv.value, 'value': pv.id}}
     end
+    
+    # get letters dataselect values
+    def letters_dataselect_values
+      return [] if letters.nil?
+      Erp::Products::PropertiesValue.where(id: JSON.parse(letters)).map{|pv| {'text': pv.value, 'value': pv.id}}
+    end
 
     # get products dataselect values
     def products_dataselect_values
@@ -54,6 +69,11 @@ module Erp::Prices
     # display properties values
     def display_properties_values
       Erp::Products::PropertiesValue.where(id: JSON.parse(properties_values)).map(&:value).join(', ')
+    end
+    
+    # display letters values
+    def display_letters
+      Erp::Products::PropertiesValue.where(id: JSON.parse(letters)).map(&:value).join(', ')
     end
 
     # display products name
@@ -102,6 +122,10 @@ module Erp::Prices
 
       if params[:properties_value_id].present?
         query = query.where("properties_values LIKE ? OR properties_values is NULL OR properties_values = '' OR properties_values = '[]'", '%"'+params[:properties_value_id].to_s+'"%')
+      end
+      
+      if params[:letter_id].present?
+        query = query.where("letters LIKE ? OR letters is NULL OR letters = '' OR letters = '[]'", '%"'+params[:letter_id].to_s+'"%')
       end
 
       if params[:quantity].present?
@@ -157,7 +181,7 @@ module Erp::Prices
       contact_prices = self.get_related_prices(params)
       rows = []
       contact_prices.each do |cp|
-        rows << {products: cp.display_products_name, min_max: cp.display_min_max, pvalue: cp.display_properties_values, price: cp.price}
+        rows << {products: cp.display_products_name, min_max: cp.display_min_max, pvalue: cp.display_properties_values, lvalue: cp.display_letters, price: cp.price}
       end
       return rows
     end

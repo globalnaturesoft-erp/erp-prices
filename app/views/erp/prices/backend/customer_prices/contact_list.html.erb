@@ -46,7 +46,8 @@
                             ).each do |row| %>
                                 <span class="font-yellow text-small">
                                     <%= raw (row[:min_max].present? ? ('SL: ' + row[:min_max]) : '') +
-                                            (row[:pvalue].present? ? (' | Đ.kính: ' + row[:pvalue]) : '')
+                                            (row[:pvalue].present? ? (' | Đ.kính: ' + row[:pvalue]) : '') +
+                                            (row[:lvalue].present? ? (' | Đ.kính: ' + row[:lvalue]) : '')
                                     %>
                                 </span><br>
                                 <strong><%= format_price(row[:price]) %></strong>

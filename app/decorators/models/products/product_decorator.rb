@@ -16,6 +16,7 @@ Erp::Products::Product.class_eval do
       contact_id: options[:contact_id],
       category_id: self.category_id,
       properties_value_id: self.get_properties_value(Erp::Products::Property.getByName(Erp::Products::Property::NAME_DUONG_KINH)),
+      letter_id: self.get_properties_value(Erp::Products::Property.getByName(Erp::Products::Property::NAME_CHU)),
       quantity: options[:quantity],
       type: Erp::Prices::Price::TYPE_SALES
     )
@@ -27,6 +28,7 @@ Erp::Products::Product.class_eval do
       contact_id: options[:contact_id],
       category_id: self.category_id,
       properties_value_id: self.get_properties_value(Erp::Products::Property.getByName(Erp::Products::Property::NAME_DUONG_KINH)),
+      letter_id: self.get_properties_value(Erp::Products::Property.getByName(Erp::Products::Property::NAME_CHU)),
       type: Erp::Prices::Price::TYPE_PURCHASE
     )
   end
@@ -37,6 +39,7 @@ Erp::Products::Product.class_eval do
       contact_id: options[:contact_id],
       category_id: self.category_id,
       properties_value_id: self.get_properties_value(Erp::Products::Property.getByName(Erp::Products::Property::NAME_DUONG_KINH)),
+      letter_id: self.get_properties_value(Erp::Products::Property.getByName(Erp::Products::Property::NAME_CHU)),
       type: Erp::Prices::Price::TYPE_SALES
     )
   end
