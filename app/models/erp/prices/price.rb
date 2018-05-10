@@ -183,9 +183,7 @@ module Erp::Prices
       contact_prices.each do |cp|
         rows << {products: cp.display_products_name, min_max: cp.display_min_max, pvalue: cp.display_properties_values, lvalue: cp.display_letters, price: cp.price}
       end
-      #return rows
-      
-      return []
+      return rows
     end
 
     # get price by product
