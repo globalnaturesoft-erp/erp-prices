@@ -68,12 +68,12 @@ module Erp::Prices
 
     # display properties values
     def display_properties_values
-      Erp::Products::PropertiesValue.where(id: JSON.parse(properties_values)).map(&:value).join(', ')
+      properties_values.present? ? Erp::Products::PropertiesValue.where(id: JSON.parse(properties_values)).map(&:value).join(', ') : ''
     end
     
     # display letters values
     def display_letters
-      Erp::Products::PropertiesValue.where(id: JSON.parse(letters)).map(&:value).join(', ')
+      letters.present? ? Erp::Products::PropertiesValue.where(id: JSON.parse(letters)).map(&:value).join(', ') : ''
     end
 
     # display products name
@@ -183,7 +183,9 @@ module Erp::Prices
       contact_prices.each do |cp|
         rows << {products: cp.display_products_name, min_max: cp.display_min_max, pvalue: cp.display_properties_values, lvalue: cp.display_letters, price: cp.price}
       end
-      return rows
+      #return rows
+      
+      return []
     end
 
     # get price by product
