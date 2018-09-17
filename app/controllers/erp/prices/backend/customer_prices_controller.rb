@@ -3,7 +3,17 @@ module Erp
     module Backend
       class CustomerPricesController < Erp::Backend::BackendController
         before_action :set_contact, only: [:update_contact, :do_update_contact, :general_update]
-
+        
+        def index
+          # bang gia ban cho tung khach hang
+          authorize! :sales_customer_prices_update, nil
+        end
+        
+        def general
+          # bang gia ban chung
+          authorize! :sales_customer_prices_update_general, nil
+        end
+        
         # POST /customer_prices/contact_list
         def contact_list
           @contacts = Erp::Contacts::Contact.search(params)
